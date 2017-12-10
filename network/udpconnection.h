@@ -1,6 +1,5 @@
 #ifndef UDPCONNECTION_H
 #define UDPCONNECTION_H
-
 #include <QObject>
 #include <QHostAddress>
 #include <QUdpSocket>

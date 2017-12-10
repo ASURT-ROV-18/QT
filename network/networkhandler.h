@@ -1,6 +1,5 @@
 #ifndef NETWORKHANDLER_H
 #define NETWORKHANDLER_H
-
 #include <QObject>
 #include <QHostAddress>
 #include <QUdpSocket>
@@ -19,6 +18,7 @@ public:
     void setUDPConnection(UDPConnection *udpConnection);
     void setTCPConnection(TCPConnection *tcpConnection);
     bool isUDPSocketValid();
+    //where iss TCPP
 private:
     UDPConnection *udpConnection;
     TCPConnection *tcpConnection;
