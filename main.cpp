@@ -9,7 +9,8 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     MainWindow w;
-    JoystickHandler s(0);
+    NetworkHandler nh;
+    JoystickHandler s(0, &nh);
     w.show();
     return a.exec();
 }

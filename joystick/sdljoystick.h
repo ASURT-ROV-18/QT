@@ -29,7 +29,7 @@ private:
     SDL_Joystick *controller = NULL;
     QVector<int> axes;
     QVector<int> buttons;
-    const int timerUpdateMills = 100;
+    const int timerUpdateMills = 20;
     void updateAxes(SDL_Event e);
     void updateButtons(SDL_Event e);
     bool connected;

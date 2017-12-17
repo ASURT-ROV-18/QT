@@ -33,12 +33,12 @@ bool SDLJoystick::reConnect()
 
 int SDLJoystick::getAxisMaxValue()
 {
-    return 32000;
+    return 32767;
 }
 
 int SDLJoystick::getAxisMinValue()
 {
-    return -32000;
+    return -32767;
 }
 
 
@@ -70,7 +70,9 @@ bool SDLJoystick::init()
 void SDLJoystick::updateAxes(SDL_Event e)
 {
     if(e.jaxis.which != 0) return;
-    axes[e.jaxis.axis] = e.jaxis.value;
+    for(int i = 0; i < SDL_JoystickNumAxes(controller); i++){
+        axes[i] = SDL_JoystickGetAxis(controller,i);
+    }
     emit axesMoved();
 }
 
