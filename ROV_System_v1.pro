@@ -13,6 +13,18 @@ TEMPLATE = app
 TARGET = ROV_System_v1
 INCLUDEPATH += .
 
+# Tell qmake to use pkg-config to find QtGStreamer.
+CONFIG += link_pkgconfig
+
+# Now tell qmake to link to QtGStreamer and also use its include path and Cflags.
+contains(QT_VERSION, ^4\\..*) {
+  PKGCONFIG += QtGStreamer-1.0 QtGStreamerUi-1.0
+}
+contains(QT_VERSION, ^5\\..*) {
+  PKGCONFIG += Qt5GStreamer-1.0 Qt5GStreamerUi-1.0
+  QT += widgets
+}
+
 # Input
 HEADERS += mainwindow.h \
            joystick/joystick.h \
@@ -20,7 +32,8 @@ HEADERS += mainwindow.h \
            network/networkhandler.h \
            network/tcpconnection.h \
            network/udpconnection.h \
-           joystick/joystickhandler.h
+           joystick/joystickhandler.h \
+    videostream/player.h
 
 
 FORMS += mainwindow.ui
@@ -32,7 +45,8 @@ SOURCES += main.cpp \
            network/networkhandler.cpp \
            network/tcpconnection.cpp \
            network/udpconnection.cpp \
-           joystick/joystickhandler.cpp
+           joystick/joystickhandler.cpp \
+    videostream/player.cpp
 
 win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../../../../Qt/Qt5.7.0/5.7/mingw53_32/lib/ -llibSDL2.dll
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../../../../Qt/Qt5.7.0/5.7/mingw53_32/lib/ -llibSDL2.dll
