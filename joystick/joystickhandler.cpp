@@ -83,12 +83,11 @@ void JoystickHandler::validateNewAxesData()
     differences = ignoreError(differences, newValues);
     qDebug() << differences << endl;
     updateAxes(differences, newValues);
-
 }
 
 void JoystickHandler::validateNewButtonsData()
 {
-    QVector<int> newValues = joystick->getAxes();
+    QVector<int> newValues = joystick->getButtons();
     QVector<int> differences = compareButtons(newValues);
     updateButtons(differences, newValues);
 }

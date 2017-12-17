@@ -15,11 +15,11 @@ private:
     QVector<int> buttonsLastValues;
     QVector<int> compareAxies(QVector<int> newReadings);
     QVector<int> ignoreError(QVector<int> diffs, QVector<int> newReadings);
-    int ERROR_PERCENTAGE = 5;
     void updateAxes(QVector<int> diffs, QVector<int> newReadings);
     void updateButtons(QVector<int> diffs, QVector<int> newReadings);
     QString buildMessage(int messageType, QVector<int> values);
     QVector<int> compareButtons(QVector<int> newReadings);
+    int ERROR_PERCENTAGE = 5;
 
 public slots:
     void validateNewAxesData();
