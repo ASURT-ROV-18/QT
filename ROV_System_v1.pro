@@ -19,7 +19,8 @@ HEADERS += mainwindow.h \
            joystick/sdljoystick.h \
            network/networkhandler.h \
            network/tcpconnection.h \
-           network/udpconnection.h
+           network/udpconnection.h \
+           joystick/joystickhandler.h
 
 
 FORMS += mainwindow.ui
@@ -30,7 +31,8 @@ SOURCES += main.cpp \
            joystick/sdljoystick.cpp \
            network/networkhandler.cpp \
            network/tcpconnection.cpp \
-           network/udpconnection.cpp
+           network/udpconnection.cpp \
+           joystick/joystickhandler.cpp
 
 win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../../../../Qt/Qt5.7.0/5.7/mingw53_32/lib/ -llibSDL2.dll
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../../../../Qt/Qt5.7.0/5.7/mingw53_32/lib/ -llibSDL2.dll

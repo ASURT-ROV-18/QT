@@ -8,15 +8,16 @@ class Joystick : public QObject
 {
     Q_OBJECT
 public:
-     virtual int getX() = 0;
-     virtual int getY() = 0;
-     virtual int getZ() = 0;
-     virtual int getR() = 0;
-     virtual QVector<int>* getButtons() = 0;
+     virtual QVector<int> getAxes() = 0;
+     virtual QVector<int> getButtons() = 0;
+     virtual bool isConnected() = 0;
+     virtual bool reConnect() = 0;
+     virtual int getAxisMaxValue() = 0;
+     virtual int getAxisMinValue() = 0;
      virtual ~Joystick(){}
 signals :
      void axesMoved();
-     void buttonChanged(int);
+     void buttonsChanged();
 };
 
 

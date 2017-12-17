@@ -10,17 +10,19 @@
 #include <QTimer>
 #include "joystick.h"
 
-class SDLJoystick : Joystick
+class SDLJoystick : public Joystick
 {
     Q_OBJECT
     Q_INTERFACES(Joystick)
 public:
     SDLJoystick();
-    int getX();
-    int getY();
-    int getZ();
-    int getR();
-    QVector<int>* getButtons();
+    QVector<int> getAxes();
+    QVector<int> getButtons();
+    bool isConnected();
+    bool reConnect();
+    int getAxisMaxValue();
+    int getAxisMinValue();
+    static int SDLLIB;
     ~SDLJoystick();
 private:
     bool init();
@@ -30,6 +32,7 @@ private:
     const int timerUpdateMills = 100;
     void updateAxes(SDL_Event e);
     void updateButtons(SDL_Event e);
+    bool connected;
 private slots:
     void checkSDLEvents();
 

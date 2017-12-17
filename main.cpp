@@ -4,11 +4,12 @@
 #include "network/networkhandler.h"
 #include "network/tcpconnection.h"
 #include "joystick/sdljoystick.h"
+#include "joystick/joystickhandler.h"
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     MainWindow w;
-    SDLJoystick s;
+    JoystickHandler s(0);
     w.show();
     return a.exec();
 }

@@ -1,37 +1,44 @@
 #include "sdljoystick.h"
 
+int SDLJoystick::SDLLIB = 0;
 SDLJoystick::SDLJoystick()
 {
     QObject(0);
-    init();
+    connected = init();
     QTimer *updateTimer = new QTimer();
     connect(updateTimer, SIGNAL(timeout()), this, SLOT(checkSDLEvents()));
     updateTimer->start(timerUpdateMills);
 }
 
-int SDLJoystick::getX()
+QVector<int> SDLJoystick::getAxes()
 {
-    return (axes.size() >= 1)? axes[0] : 0;
+    return axes;
 }
 
-int SDLJoystick::getY()
+QVector<int> SDLJoystick::getButtons()
 {
-    return (axes.size() >= 2)? axes[1] : 0;
+    return buttons;
 }
 
-int SDLJoystick::getZ()
+bool SDLJoystick::isConnected()
 {
-    return (axes.size() >= 3)? axes[2] : 0;
+    return connected;
 }
 
-int SDLJoystick::getR()
+bool SDLJoystick::reConnect()
 {
-    return (axes.size() >= 4)? axes[3] : 0;
+    connected = init();
+    return connected;
 }
 
-QVector<int> *SDLJoystick::getButtons()
+int SDLJoystick::getAxisMaxValue()
 {
-    return NULL;
+    return 32000;
+}
+
+int SDLJoystick::getAxisMinValue()
+{
+    return -32000;
 }
 
 
@@ -64,15 +71,13 @@ void SDLJoystick::updateAxes(SDL_Event e)
 {
     if(e.jaxis.which != 0) return;
     axes[e.jaxis.axis] = e.jaxis.value;
-    qDebug() << "axis "<< e.jaxis.axis << " " << e.jaxis.value << endl;
     emit axesMoved();
 }
 
 void SDLJoystick::updateButtons(SDL_Event e)
 {
     buttons[e.jbutton.button] = e.jbutton.state;
-    qDebug() << "button " << e.jbutton.button << " " << e.jbutton.state;
-    emit buttonChanged(e.jbutton.button);
+    emit buttonsChanged();
 }
 
 
