@@ -1,22 +1,37 @@
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef DIALOG_H
+#define DIALOG_H
 
 #include <QMainWindow>
+#include <QtCore>
+#include <QtGui>
+#include <QTimer>
+#include <SFML/Window.hpp>
+#include <QDesktopWidget>
+#include <copilotscreen.h>
 
 namespace Ui {
-class MainWindow;
+class PilotWindow;
 }
 
-class MainWindow : public QMainWindow
+class PilotWindow : public QMainWindow
 {
     Q_OBJECT
 
 public:
-    explicit MainWindow(QWidget *parent = 0);
-    ~MainWindow();
+    explicit PilotWindow(QWidget *parent = 0);
+    ~PilotWindow();
+
+public:
+    void on_actionOpen_co_pilot_screen_triggered();
+
+private slots:
+    void on_actionCo_pilot_ready_triggered();
 
 private:
-    Ui::MainWindow *ui;
+    Ui::PilotWindow *ui;
+   // QTreeWidget *tree;
+public:
+    CoPilotScreen * CoPilotPointer;
 };
 
-#endif // MAINWINDOW_H
+#endif // DIALOG_H

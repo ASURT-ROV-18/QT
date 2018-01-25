@@ -1,26 +1,47 @@
-#ifndef JOYSTICK_H
-#define JOYSTICK_H
-
-#include <QtPlugin>
+#pragma once
+#include "backend/base.h"
+#include "backend/sfml.h"
+#include "button.h"
+#include "common.h"
+#include "mode/drive.h"
+#include "mode/rotation.h"
+#include "pipeline.h"
+#include "state.h"
 #include <QObject>
-#include <QVector>
-class Joystick : public QObject
-{
-    Q_OBJECT
+#include <unordered_map>
+#include <vector>
+
+namespace JS {
+
+class Joystick : public QObject {
+  Q_OBJECT
 public:
-     virtual int getX() = 0;
-     virtual int getY() = 0;
-     virtual int getZ() = 0;
-     virtual int getR() = 0;
-     virtual QVector<int>* getButtons() = 0;
-     virtual ~Joystick(){}
-signals :
-     void axesMoved();
-     void buttonChanged(int);
+  explicit Joystick(unsigned id = 0, BackendID backend_id = BackendID::SFML,
+                    QObject *parent = 0);
+
+  unsigned getJoystickIndex() const;
+
+  ~Joystick();
+
+private:
+  unsigned _joystick;
+  const Backend::Base *_backend;
+  Pipeline *_pipeline;
+  State *_state, *_old_state;
+  bool _connected;
+  std::unordered_map<std::string, float> _updated_values;
+  float camera_value = 0;
+  void init_modes();
+
+public:
+  void init();
+  bool isConnected() const;
+
+signals:
+  void update(std::unordered_map<std::string, float> values);
+  void connected(bool connected);
+
+private slots:
+  void update_states();
 };
-
-
-Q_DECLARE_INTERFACE(Joystick, "SDLJoystick")
-
-
-#endif // JOYSTICK_H
+}

@@ -1,15 +1,25 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include <QDebug>
+#include <QVBoxLayout>
+#include <QString>
 
-MainWindow::MainWindow(QWidget *parent) :
+PilotWindow::PilotWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow)
+    ui(new Ui::PilotWindow)
 {
     ui->setupUi(this);
+    CoPilotPointer = new CoPilotScreen();
+    //m = new Dialog22();
+}
+ //DO NOT FORGET TO DELETE ALL POINTERS//
+PilotWindow::~PilotWindow()
+{
+    delete CoPilotPointer;
+    delete ui;
 }
 
-MainWindow::~MainWindow()
+void PilotWindow::on_actionCo_pilot_ready_triggered()
 {
-    delete ui;
+    CoPilotPointer->setModal(true);
+    CoPilotPointer->exec();
 }
