@@ -9,8 +9,8 @@ class Rotation : public Base {
 public:
   Rotation(State &state) : Base(state) {}
   void enter() {
-      _state.getAxis(AxisID::X).update(0);
-      _state.getAxis(AxisID::Y).update(0);
+    //    _state.getAxis(AxisID::X).update(0);
+    //      _state.getAxis(AxisID::Y).update(0);
   }
   void process() {
     //_state.getAxis(AxisID::X).update(0);

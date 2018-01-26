@@ -1,6 +1,9 @@
 #include "copilotscreen.h"
 #include "ui_copilotscreen.h"
 
+#include <QFuture>
+#include <QtConcurrent/QtConcurrent>
+
 #define First_Row 0
 #define Second_Row 2
 #define Third_Row 4
@@ -15,20 +18,27 @@
 #define First2Second_Column 1
 #define Second2Third_Column 3
 
+#define path_raw "./raw/"
+#define path_screens "./screenshots/"
+
 #include <QDebug>
 
 CoPilotScreen::CoPilotScreen(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::CoPilotScreen) {
   ui->setupUi(this);
+
+  _joystick = new JS::Joystick();
+  _connection = new connection();
+
   this->setWindowTitle("CoPilot Screen");
 
   _Central_Widget = new QWidget(this);
-  _Master_Camera = new QWidget(/*ui->centralwidget*/ /*this*/ _Central_Widget);
+  _Master_Camera = new Camera(_Central_Widget);
   _Master_Widget = new QWidget(/*ui->centralwidget*/ /*this*/ _Central_Widget);
   _Central_Grid =
       new QGridLayout(/*ui->centralwidget*/ /*this*/ _Central_Widget);
   _Master_Grid = new QGridLayout(_Master_Widget);
-  _Master_Camera->setStyleSheet("background-color: blue;");
+  //  _Master_Camera->setStyleSheet("background-color: blue;");
   _Central_Grid->addWidget(_Master_Camera, 0, 0);
   _Central_Grid->addWidget(_Master_Widget, 0, 0);
   _Central_Grid->setMargin(0);
@@ -46,9 +56,6 @@ CoPilotScreen::CoPilotScreen(QWidget *parent)
   _SBar = new UIW::statusBar(this);
   _Rotate_Label = new UIW::RotatableLabel(this);
 
-  _joystick = new JS::Joystick();
-  _connection = new connection();
-
   _Master_Grid->addWidget(_Depth_Indicator, First_Row, First_Column,
                           Qt::AlignTop | Qt::AlignLeft);
   _Master_Grid->addWidget(_Timer, First_Row, Second_Column,
@@ -64,14 +71,17 @@ CoPilotScreen::CoPilotScreen(QWidget *parent)
 
   connect(_joystick, SIGNAL(update(std::unordered_map<std::string, float>)),
           _connection, SLOT(write(std::unordered_map<std::string, float>)));
+  connect(_joystick, SIGNAL(update(std::unordered_map<std::string, float>)),
+          this, SLOT(js_update(std::unordered_map<std::string, float>)));
+
   connect(_connection, SIGNAL(networkState(bool)), _SBar,
           SLOT(ethernetConnected(bool)));
   connect(_connection, SIGNAL(TCPState(bool)), _SBar, SLOT(RPiConnected(bool)));
   connect(_joystick, SIGNAL(connected(bool)), _SBar,
           SLOT(joystickConnected(bool)));
 
-//  connect(_SBar , SIGNAL(updateMode(std::unordered_map<std::string,std::string>))
-//          , _connection , SLOT(write(std::unordered_map<std::string,float>)));
+  connect(_SBar, SIGNAL(updateMode(std::unordered_map<std::string, float>)),
+          _connection, SLOT(write(std::unordered_map<std::string, float>)));
 
   //    connect(this,SIGNAL(updateDepth(float)),_Depth_Indicator,SLOT(updateValue(float)));
   connect(this, SIGNAL(starTimerCounting()), _Timer, SLOT(startCounting()));
@@ -110,7 +120,31 @@ CoPilotScreen::CoPilotScreen(QWidget *parent)
   this->setFocus();
 
   _joystick->init();
-  _connection->initializeConnection(QHostAddress("12.0.0.145"), 8005, true);
+  _connection->initializeConnection(QHostAddress("10.0.0.1"), 8005, true);
+  _Master_Camera->init("0.0.0.0", "5000");
+  _Master_Camera->play();
+
+  QDir dir_raw, dir_screens;
+
+  dir_raw.mkpath(path_raw);
+  dir_screens.mkpath(path_screens);
+}
+
+void CoPilotScreen::saveScreenshot() {
+  QString name = QDateTime::currentDateTime().toString() + ".png";
+  auto img = grab();
+
+  if (img.save(path_screens + name)) {
+    qDebug() << "Screenshot saved!! @    " << path_screens << name;
+  }
+
+  if (!_Master_Camera->isPlaying())
+    return;
+
+  auto raw = _Master_Camera->takeScreenshot();
+  if (raw.save(path_raw + name)) {
+    qDebug() << "Raw Image saved!! @    " << path_raw << name;
+  }
 }
 
 CoPilotScreen::~CoPilotScreen() { delete ui; }
@@ -150,10 +184,17 @@ void CoPilotScreen::keyPressEvent(QKeyEvent *event) {
     }
   } else if (event->key() == Qt::Key_T) {
     qDebug() << "T";
-    _Timer->startCounting();
+    _Timer->Toggle_start_pause();
+  } else if (event->key() == Qt::Key_R) {
+    qDebug() << "R";
+    _Timer->Reset();
   }
 }
-
+void CoPilotScreen::js_update(std::unordered_map<std::string, float> data) {
+  if (data["Screenshot"] != 1)
+    return;
+  QtConcurrent::run(this, &CoPilotScreen::saveScreenshot);
+}
 void CoPilotScreen::getFocus() { this->setFocus(); }
 
 QWidget *CoPilotScreen::getCentralWidget() { return _Master_Widget; }

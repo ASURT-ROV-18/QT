@@ -15,6 +15,8 @@ enum class ButtonID {
   Z_UP = 4,
   CAM_UP = 5,
   Drive = 6,
+  LED1 = 8,
+  LED2 = 9,
   SPD_DN = 10,
   SPD_UP = 11,
   CAM = 13
@@ -33,8 +35,8 @@ enum class AxisID {
 }
 
 const std::string StringButtons[] = {
-    "Rotation", "Screenshot", "Z_DN", "CAM_DN", "Z_UP",   "CAM_UP","unused",
-    "unused","unused","unused",     "SPD_DN", "SPD_UP","unused",     "CAM",
+    "Rotation", "Screenshot", "Z_DN", "CAM_DN", "Z_UP",   "CAM_UP", "unused",
+    "unused",   "LED1",       "LED2", "unused", "unused", "unused", "CAM",
 };
-const std::string StringAxes[] = {"X", "Y",       "Speed", "R",
+const std::string StringAxes[] = {"X",      "Y",      "Speed", "R",
                                   "unused", "unused", "PovX",  "PovY"};

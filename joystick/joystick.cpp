@@ -42,6 +42,12 @@ void Joystick::init_modes() {
   _old_state = new State(_backend->getButtonCount(getJoystickIndex()),
                          _backend->getAxisCount(getJoystickIndex()));
 
+  _state->getButton(ButtonID::LED1).setType(Button::Type::Toggle);
+  _old_state->getButton(ButtonID::LED1).setType(Button::Type::Toggle);
+
+  _state->getButton(ButtonID::LED2).setType(Button::Type::Toggle);
+  _old_state->getButton(ButtonID::LED2).setType(Button::Type::Toggle);
+
   // TODO: add General Mode
   _pipeline = new Pipeline(_state);
   _pipeline->add(ButtonID::Drive, new Mode::Drive(*_state));
@@ -56,8 +62,7 @@ void Joystick::update_states() { // Checks states of buttons and axes
   bool reconnected = false;
   auto isCurrentlyConnected = _backend->isJoystickConnected(getJoystickIndex());
 
-  if (isCurrentlyConnected != _connected)
-  {
+  if (isCurrentlyConnected != _connected) {
     qDebug() << "Connected";
     emit connected(isCurrentlyConnected);
     reconnected = true;
@@ -65,13 +70,13 @@ void Joystick::update_states() { // Checks states of buttons and axes
   _connected = isCurrentlyConnected;
 
   if (!isConnected()) {
-      qDebug() << "Joystick is not connected";
     // delete state ?
     return;
   }
 
   // std::unordered_map<std::string, float> _updated_values;
-  if(reconnected) init_modes();
+  if (reconnected)
+    init_modes();
   (*_old_state) = (*_state);
   for (unsigned i = 0; i < _state->getAxisCount(); ++i) {
     auto value = _backend->getAxisValue(getJoystickIndex(), i);
@@ -84,15 +89,12 @@ void Joystick::update_states() { // Checks states of buttons and axes
 
   _pipeline->process();
 
-
-
   if (_state->getButton(ButtonID::Rotation).getState()) {
     _pipeline->link(ButtonID::Rotation);
-    _pipeline->unlink(ButtonID::Drive); }
-  else {
+    _pipeline->unlink(ButtonID::Drive);
+  } else {
     _pipeline->unlink(ButtonID::Rotation);
     _pipeline->link(ButtonID::Drive);
-
   }
   if (_state->getButton(ButtonID::CAM_UP).getState() ||
       _state->getButton(ButtonID::CAM_DN).getState()) {
@@ -104,7 +106,6 @@ void Joystick::update_states() { // Checks states of buttons and axes
       camera_value = std::max(camera_value - 1.0, -45.0);
 
     _updated_values["CAM"] = camera_value;
-    qDebug() << "CAM " << _updated_values["CAM"];
   }
 
   for (unsigned i = 0; i < _state->getAxisCount(); i++) {
@@ -114,10 +115,12 @@ void Joystick::update_states() { // Checks states of buttons and axes
     if (_state->getAxis(i).getValue() != _old_state->getAxis(i).getValue()) {
       changed = true;
       auto value = _state->getAxis(i).getValue();
-      if(i == (int)AxisID::X) value *= -1;
+      if (i == (int)AxisID::X)
+        value *= -1;
       _updated_values[_state->getAxis(i).getTitle()] = -1 * value;
-     // qDebug() << QString::fromStdString(_state->getAxis(i).getTitle()) << "   "
-       //        << _updated_values[_state->getAxis(i).getTitle()];
+      // qDebug() << QString::fromStdString(_state->getAxis(i).getTitle()) << "
+      // "
+      //        << _updated_values[_state->getAxis(i).getTitle()];
     }
   }
   for (unsigned i = 0; i < _state->getButtonCount(); i++) {
@@ -125,46 +128,54 @@ void Joystick::update_states() { // Checks states of buttons and axes
         i == (int)ButtonID::CAM)
       continue;
 
-    if ((_state->getButton(i).getState() != _old_state->getButton(i).getState())
-          || (_state->getAxis(AxisID::Z).getValue() != _old_state->getAxis(AxisID::Z).getValue())) {
-        changed = true;
+    if ((_state->getButton(i).getState() !=
+         _old_state->getButton(i).getState()) ||
+        (_state->getAxis(AxisID::Z).getValue() !=
+         _old_state->getAxis(AxisID::Z).getValue())) {
+      changed = true;
 
-      if(_state->getAxis(AxisID::Z).getValue() != _old_state->getAxis(AxisID::Z).getValue()
-              ||_state->getButton(ButtonID::Z_UP).wasChanged()
-                                            || _state->getButton(ButtonID::Z_DN).wasChanged()) {
+      if (_state->getAxis(AxisID::Z).getValue() !=
+              _old_state->getAxis(AxisID::Z).getValue() ||
+          _state->getButton(ButtonID::Z_UP).wasChanged() ||
+          _state->getButton(ButtonID::Z_DN).wasChanged()) {
 
-      if (_state->getButton(ButtonID::Z_UP).getState())
-        _updated_values["Z"] = -1 * (_state->getAxis(AxisID::Z).getValue() - Z_OFFSET) / 2;
+        if (_state->getButton(ButtonID::Z_UP).getState())
+          _updated_values["Z"] =
+              -1 * (_state->getAxis(AxisID::Z).getValue() - Z_OFFSET) / 2;
 
-      else if (_state->getButton(ButtonID::Z_DN).getState())
-        _updated_values["Z"] = (_state->getAxis(AxisID::Z).getValue() - Z_OFFSET) / 2;
+        else if (_state->getButton(ButtonID::Z_DN).getState())
+          _updated_values["Z"] =
+              (_state->getAxis(AxisID::Z).getValue() - Z_OFFSET) / 2;
 
-      else if ((_state->getButton(ButtonID::Z_DN).wasChanged() || _state->getButton(ButtonID::Z_UP).wasChanged())
-               && !(_state->getButton(ButtonID::Z_DN).getState() && _state->getButton(ButtonID::Z_UP).getState()))
-     {
-        _updated_values["Z"] = 0;
-      }//qDebug() << "Z" << " = " << _updated_values["Z"];
+        else if ((_state->getButton(ButtonID::Z_DN).wasChanged() ||
+                  _state->getButton(ButtonID::Z_UP).wasChanged()) &&
+                 !(_state->getButton(ButtonID::Z_DN).getState() &&
+                   _state->getButton(ButtonID::Z_UP).getState())) {
+          _updated_values["Z"] = 0;
+        } // qDebug() << "Z" << " = " << _updated_values["Z"];
 
       }
 
       else {
-          if (i == (int)ButtonID::Z_UP || i == (int)ButtonID::Z_DN || _state->getButton(i).getTitle() == "unused") continue;
-        _updated_values[_state->getButton(i).getTitle()] = _state->getButton(i).getState();
+        if (i == (int)ButtonID::Z_UP || i == (int)ButtonID::Z_DN ||
+            _state->getButton(i).getTitle() == "unused")
+          continue;
+        _updated_values[_state->getButton(i).getTitle()] =
+            _state->getButton(i).getState();
       }
     }
   }
 
-  if(reconnected) {
-      for(unsigned i = 0 ; i < _state->getAxisCount() ; i++)
-      {
-          if(_state->getAxis(i).getTitle() == "unused") continue;
-          _updated_values[_state->getAxis(i).getTitle()] = 0;
-          qDebug() << _updated_values[_state->getAxis(i).getTitle()];
-      }
+  if (reconnected) {
+    for (unsigned i = 0; i < _state->getAxisCount(); i++) {
+      if (_state->getAxis(i).getTitle() == "unused")
+        continue;
+      _updated_values[_state->getAxis(i).getTitle()] = 0;
+      qDebug() << _updated_values[_state->getAxis(i).getTitle()];
+    }
   }
 
   if (changed) {
-      qDebug() << "call";
     emit update(_updated_values);
   }
   _updated_values.clear();
