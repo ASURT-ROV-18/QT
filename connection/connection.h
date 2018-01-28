@@ -4,7 +4,6 @@
 #include <QMainWindow>
 #include <QMap>
 #include <QTcpSocket>
-#include <QUdpSocket>
 #include <QTextCodec>
 #include <QTimer>
 #include <iomanip>
@@ -20,7 +19,6 @@ class connection : public QObject {
 private:
   // variables
   QTcpSocket *_pSocket;
-  QUdpSocket *_udpSocket;
   QHostAddress _host;
   int _port;
   std::string _delimeter;

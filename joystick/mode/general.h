@@ -14,10 +14,9 @@ public:
     _state->getButton(ButtonID::CAM_UP).setType(Button::Type::Hold);
     _state->getButton(ButtonID::CAM_DN).setType(Button::Type::Hold);
     _state->getButton(ButtonID::LightsColors).setType(Button::Type::Toggle);
-    _state->getButton(ButtonID::Screenshot).setType(Button::Type::Hold);
+    _state->getButton(ButtonID::Screenshot).setType(Button::Type::Toggle);
     _state->getButton(ButtonID::Z_UP).setType(Button::Type::Toggle);
     _state->getButton(ButtonID::Z_DN).setType(Button::Type::Toggle);
-    _state->getButton(ButtonID::LED).setType(Button::Type::Toggle);
   }
 
   void process() {}

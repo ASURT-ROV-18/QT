@@ -2,7 +2,6 @@
 
 connection::connection() {
   _pSocket = new QTcpSocket();
-  _udpSocket = new QUdpSocket();
   _timer = new QTimer();
   this->_delimeter = ";";
   this->_reconnect = false;
@@ -10,14 +9,12 @@ connection::connection() {
   this->_queued = false;
   this->_polling = false;
   this->_networkConnected = false;
-  _udpSocket->bind(QHostAddress("0.0.0.0"), 8004);
   connect(_pSocket, SIGNAL(connected()), this, SLOT(detectConnected()));
   connect(_pSocket, SIGNAL(disconnected()), this, SLOT(detectDisconnected()));
   connect(_pSocket, SIGNAL(error(QAbstractSocket::SocketError)), this,
           SLOT(errorDetected(QAbstractSocket::SocketError)));
-  // connect(_pSocket, SIGNAL(readyRead()), this, SLOT(readData()));
+  connect(_pSocket, SIGNAL(readyRead()), this, SLOT(readData()));
   connect(_timer, SIGNAL(timeout()), this, SLOT(checkNetwork()));
-  connect(_udpSocket, SIGNAL(readyRead()), this, SLOT(readData()));
 }
 
 void connection::initializeConnection(
@@ -30,18 +27,10 @@ void connection::initializeConnection(
   this->_initializeTCP();
 }
 
-/*void connection::wt()
-{
-    _pSocket->waitForConnected(this->_timeout);
-}*/
-
 void connection::_initializeTCP() {
   if (!this->isConnected()) {
     _pSocket->connectToHost(this->_host, this->_port);
-    // std::thread t1(wt);
     _pSocket->waitForConnected(this->_timeout);
-    // t1.join();
-    // this->wt();
     if (!this->isConnected() && !this->_polling && this->_reconnect) {
       qDebug() << "Couldn't connect. Retrying...";
       _timer->start(this->_timeout);
@@ -63,9 +52,6 @@ void connection::_initializeTCP() {
     int interval = 1; // send a keepalive packet out every 2 seconds (after the
                       // 5 second idle period)
     setsockopt(fd, IPPROTO_TCP, TCP_KEEPINTVL, &interval, sizeof(interval));
-    int i = 1;
-    setsockopt(fd, IPPROTO_TCP, TCP_NODELAY, (void *)&i, sizeof(i));
-    setsockopt(fd, IPPROTO_TCP, TCP_QUICKACK, (void *)&i, sizeof(i));
   }
 }
 
@@ -117,11 +103,6 @@ bool connection::isConnected() {
 
 void connection::write(std::unordered_map<std::string, float> map) {
   auto it = map.begin();
-  //  qDebug() << QString::fromStdString(it->first);
-  //  qDebug() << QString::number(it->second);
-  for (auto k : map) {
-    qDebug() << QString::fromStdString(k.first) << ": " << k.second;
-  }
   if (this->isConnected()) {
     if (this->_queued) {
       _queuedMap.clear();
@@ -151,9 +132,7 @@ void connection::_sendTCP(std::string m) {
 }
 
 void connection::readData() {
-  QByteArray data;
-  data.resize(_udpSocket->pendingDatagramSize());
-  _udpSocket->readDatagram(data.data(), data.size());
+  QByteArray data = _pSocket->readAll();
   QString data_qs(data);
   qDebug() << data_qs;
   std::string data_string = data_qs.toUtf8().constData();
@@ -170,6 +149,5 @@ void connection::readData() {
 
 connection::~connection() {
   delete _pSocket;
-  delete _udpSocket;
   delete _timer;
 }
