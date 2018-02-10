@@ -8,6 +8,12 @@ CONFIG += c++11
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
+INCLUDEPATH += $$PWD/../../../../../Qt/Qt5.7.0/5.7/mingw53_32/include
+INCLUDEPATH += /usr/include/gstreamer-1.0/gst
+DEPENDPATH += $$PWD/../../../../../Qt/Qt5.7.0/5.7/mingw53_32/includ
+
+FLAGS    = -L /lib64
+LIBS     = -lusb-1.0 -l pthread
 
 TEMPLATE = app
 TARGET = ROV_System_v1
@@ -20,7 +26,9 @@ HEADERS += mainwindow.h \
            network/networkhandler.h \
            network/tcpconnection.h \
            network/udpconnection.h \
-           joystick/joystickhandler.h
+           joystick/joystickhandler.h \
+           videostream/camera.h \
+           UI_elements/clock.h
 
 
 FORMS += mainwindow.ui
@@ -32,13 +40,22 @@ SOURCES += main.cpp \
            network/networkhandler.cpp \
            network/tcpconnection.cpp \
            network/udpconnection.cpp \
-           joystick/joystickhandler.cpp
+           joystick/joystickhandler.cpp \
+           videostream/camera.cpp \
+           UI_elements/clock.cpp
+
+
 
 win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../../../../Qt/Qt5.7.0/5.7/mingw53_32/lib/ -llibSDL2.dll
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../../../../Qt/Qt5.7.0/5.7/mingw53_32/lib/ -llibSDL2.dll
 #else:unix: LIBS += -L$$PWD/../../../../../Qt/Qt5.7.0/5.7/mingw53_32/lib/ -llibSDL2.dll
 else:unix: LIBS += -L/usr/local/lib -lSDL2
 
+CONFIG += c++11 c++17
 
-INCLUDEPATH += $$PWD/../../../../../Qt/Qt5.7.0/5.7/mingw53_32/include
-DEPENDPATH += $$PWD/../../../../../Qt/Qt5.7.0/5.7/mingw53_32/include
+unix {
+  CONFIG += link_pkgconfig
+  PKGCONFIG += sfml-window
+  PKGCONFIG += Qt5GLib-2.0 Qt5GStreamer-1.0 Qt5GStreamerUi-1.0 Qt5GStreamerUtils-1.0
+}
+

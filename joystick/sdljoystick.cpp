@@ -22,13 +22,12 @@ QVector<int> SDLJoystick::getButtons()
 
 bool SDLJoystick::isConnected()
 {
-    return connected;
+    return init();
 }
 
 bool SDLJoystick::reConnect()
 {
-    connected = init();
-    return connected;
+   return init();
 }
 
 int SDLJoystick::getAxisMaxValue()
@@ -51,17 +50,19 @@ bool SDLJoystick::init()
     }
 
     if(SDL_NumJoysticks() < 1){
-        qDebug() << "no Joystick connected" << endl;
+//        qDebug() << "no Joystick connected" << endl;
         return false;
     }else{
         controller = SDL_JoystickOpen(0);
         if(controller == NULL){
-            qDebug() << "Unable to open game controller " << SDL_GetError() << endl;
+//            qDebug() << "Unable to open game controller " << SDL_GetError() << endl;
             return false;
         }else{
-            qDebug() << "The Joystick is connected " << endl;
-            axes.resize(SDL_JoystickNumAxes(controller));
-            buttons.resize(SDL_JoystickNumButtons(controller));
+//            qDebug() << "The Joystick is connected " << endl;
+            if(axes.size()==0 && buttons.size() == 0){
+                axes.resize(SDL_JoystickNumAxes(controller));
+                buttons.resize(SDL_JoystickNumButtons(controller));
+            }
             return true;
         }
     }
@@ -69,7 +70,6 @@ bool SDLJoystick::init()
 
 void SDLJoystick::updateAxes(SDL_Event e)
 {
-    if(e.jaxis.which != 0) return;
     for(int i = 0; i < SDL_JoystickNumAxes(controller); i++){
         axes[i] = SDL_JoystickGetAxis(controller,i);
     }
@@ -85,6 +85,7 @@ void SDLJoystick::updateButtons(SDL_Event e)
 
 void SDLJoystick::checkSDLEvents()
 {
+    init();
     SDL_Event event;
     while(SDL_PollEvent(&event) != 0){
         switch(event.type){

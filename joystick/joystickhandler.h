@@ -13,7 +13,7 @@ public:
 private:
     static int AXES_MESSAGE;
     static int BUTTONS_MESSAGE;
-    Joystick *joystick;
+    Joystick *joystick = NULL;
     QVector<int> axesLastValues;
     QVector<int> buttonsLastValues;
     QVector<int> compareAxes(QVector<int> newReadings);
@@ -24,10 +24,12 @@ private:
     QVector<int> compareButtons(QVector<int> newReadings);
     int ERROR_PERCENTAGE = 0;
     void init(int libNumber);
+    int libNumber;
 
 public slots:
     void validateNewAxesData();
     void validateNewButtonsData();
+    void reconnect();
 
 signals:
     void sendJoystickData(QString message);

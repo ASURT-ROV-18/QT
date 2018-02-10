@@ -1,5 +1,6 @@
 #include "joystickhandler.h"
 #include "sdljoystick.h"
+#include <QTime>
 
 
 int JoystickHandler::AXES_MESSAGE = 0;
@@ -7,6 +8,7 @@ int JoystickHandler::BUTTONS_MESSAGE = 1;
 JoystickHandler::JoystickHandler(int libNumber)
 {
     QObject(0);
+    this->libNumber = libNumber;
     init(libNumber);
 }
 
@@ -14,6 +16,9 @@ JoystickHandler::JoystickHandler(int libNumber, NetworkHandler *networkHandler)
 {
     QObject(0);
     init(libNumber);
+    QTimer *checkConnectionTimer = new QTimer(this);
+    connect(checkConnectionTimer, SIGNAL(timeout()), this, SLOT(reconnect()));
+    checkConnectionTimer->start(100);
     connect(this, SIGNAL(sendJoystickData(QString)), networkHandler, SLOT(sendUDPMessage(QString)));
 }
 
@@ -70,6 +75,7 @@ QString JoystickHandler::buildMessage(int messageType, QVector<int> values)
         return QString("Buttons " + message);
     else if(messageType == JoystickHandler::AXES_MESSAGE)
         return QString("Axes " + message);
+    else return NULL;
 }
 
 QVector<int> JoystickHandler::compareButtons(QVector<int> newReadings)
@@ -84,16 +90,17 @@ QVector<int> JoystickHandler::compareButtons(QVector<int> newReadings)
 
 void JoystickHandler::init(int libNumber)
 {
-    if(libNumber == SDLJoystick::SDLLIB)
+    if(libNumber == SDLJoystick::SDLLIB && joystick == NULL){
         joystick = new SDLJoystick();
-
-    if(joystick->isConnected()){
-        axesLastValues.resize(joystick->getAxes().size());
-        buttonsLastValues.resize(joystick->getButtons().size());
+        connect(joystick, SIGNAL(axesMoved()), this, SLOT(validateNewAxesData()));
+        connect(joystick, SIGNAL(buttonsChanged()), this, SLOT(validateNewButtonsData()));
     }
-
-    connect(joystick, SIGNAL(axesMoved()), this, SLOT(validateNewAxesData()));
-    connect(joystick, SIGNAL(buttonsChanged()), this, SLOT(validateNewButtonsData()));
+    if(joystick->isConnected()){
+        if(axesLastValues.size() == 0 && buttonsLastValues.size() == 0){
+            axesLastValues.resize(joystick->getAxes().size());
+            buttonsLastValues.resize(joystick->getButtons().size());
+        }
+    }
 }
 
 
@@ -102,7 +109,7 @@ void JoystickHandler::validateNewAxesData()
     QVector<int> newValues = joystick->getAxes();
     QVector<int> differences = compareAxes(newValues);
     differences = ignoreError(differences, newValues);
-    qDebug() << differences << endl;
+    qDebug() << newValues << endl;
     updateAxes(differences, newValues);
 }
 
@@ -111,4 +118,11 @@ void JoystickHandler::validateNewButtonsData()
     QVector<int> newValues = joystick->getButtons();
     QVector<int> differences = compareButtons(newValues);
     updateButtons(differences, newValues);
+}
+
+void JoystickHandler::reconnect()
+{
+    if(joystick->isConnected()){
+        this->init(libNumber);
+    }
 }
