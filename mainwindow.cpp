@@ -10,6 +10,7 @@
 #include <QTabWidget>
 #include <QPushButton>
 #include <QSignalMapper>
+#include <UI_elements/clock.h>
 
 //#include "image_processing/image_processing.h"
 //#include "image_processing/mat_qimage.h"
@@ -27,6 +28,13 @@ MainWindow::MainWindow(QWidget *parent, Camera* player1, Camera* player2) :
     this->setGeometry(0,0,1280,720);
 
 
+    masterWidget =  new QWidget();
+    masterWidgetLayout = new QGridLayout(masterWidget);
+//    masterWidgetLayout->setColumnStretch(0, 7);
+//    masterWidgetLayout->setColumnStretch(1, 3);
+    masterWidget->setLayout(masterWidgetLayout);
+
+
     tabWidget = new QTabWidget(this);
     connect(tabWidget, SIGNAL(currentChanged(int)), this, SLOT(tabChanged(int)));
     tabWidget->setTabPosition(QTabWidget::TabPosition(2));
@@ -38,6 +46,10 @@ MainWindow::MainWindow(QWidget *parent, Camera* player1, Camera* player2) :
     centralWidgetTab1 = new QWidget();
     centralGridTab1 = new QGridLayout(centralWidgetTab1);
     centralGridTab1->setMargin(0);
+
+    centralGridTab1->setHorizontalSpacing(0);
+    centralGridTab1->setVerticalSpacing(0);
+
     centralWidgetTab1->setLayout(centralGridTab1);
 
     centralWidgetTab2 = new QWidget();
@@ -80,6 +92,9 @@ MainWindow::MainWindow(QWidget *parent, Camera* player1, Camera* player2) :
 ////    player2->init("udpsrc port=5000 ! application/x-rtp,media=(string)video,clock-rate=90000,encoding-name=JPEG ! rtpjpegdepay ! jpegdec ! vaapipostproc", "5000");
 ////    player2->play();
 ///
+    Clock *c = new Clock(masterWidget, 4, 0);
+    masterWidgetLayout->addWidget(c, 0, 0);
+
 
 }
 
@@ -95,19 +110,13 @@ void MainWindow::tabChanged(int index)
 {
     if(index == 0){
         centralGridTab1->addWidget(player1, 0, 0);
-        centralGridTab1->setMargin(0);
-        centralGridTab1->setHorizontalSpacing(0);
-        centralGridTab1->setVerticalSpacing(0);
-        QWidget *masterWidget =  new QWidget(centralWidgetTab1);
-        QGridLayout *masterWidgetLayout = new QGridLayout(masterWidget);
-        masterWidget->setLayout(masterWidgetLayout);
         centralGridTab1->addWidget(masterWidget, 0, 0);
     }else if(index == 1){
         centralGridTab2->addWidget(player2, 0, 0);
-        centralGridTab2->setMargin(0);
+        centralGridTab2->addWidget(masterWidget, 0, 0);
     }else if(index == 2){
         centralGridTab3->addWidget(player1, 0, 0);
         centralGridTab3->addWidget(player2, 0, 1);
-        centralGridTab3->setMargin(0);
+        centralGridTab3->addWidget(masterWidget, 0, 0);
     }
 }

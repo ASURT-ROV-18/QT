@@ -34,6 +34,8 @@ private:
     QGridLayout *centralGridTab2;
     QWidget *centralWidgetTab3;
     QGridLayout *centralGridTab3;
+    QWidget *masterWidget;
+    QGridLayout *masterWidgetLayout;
     Ui::MainWindow *ui;
 
 
