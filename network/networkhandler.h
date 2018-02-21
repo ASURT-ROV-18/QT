@@ -34,6 +34,8 @@ public slots:
     void sendTCPMessage(QString message);
     void sendUDPMessage(QString message);
 
+    void testing();
+
 signals:
     // signals for the GUI elements to update
 };

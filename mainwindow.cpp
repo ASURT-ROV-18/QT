@@ -40,6 +40,7 @@ MainWindow::MainWindow(QWidget *parent, Camera* player1, Camera* player2) :
     tabWidget->setTabPosition(QTabWidget::TabPosition(2));
     this->setCentralWidget(tabWidget);
 
+
     this->player1 = player1;
     this->player2 = player2;
 
@@ -100,9 +101,17 @@ MainWindow::MainWindow(QWidget *parent, Camera* player1, Camera* player2) :
 
 
 
+
+
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::setCams(Camera *player1, Camera *player2)
+{
+    this->player1 = player1;
+    this->player2 = player2;
 }
 
 

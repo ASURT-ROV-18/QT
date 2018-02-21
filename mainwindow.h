@@ -21,6 +21,7 @@ public:
     void setCams(Camera* player1, Camera* player2);
 
 
+
 private:
     QGst::PipelinePtr m_pipeline, videosrc;
     QGst::State state() const;

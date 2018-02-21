@@ -8,9 +8,10 @@ void HandlersThread::run()
 {
     NetworkHandler nh;
     JoystickHandler s(0, &nh);
+
+
 }
 
 HandlersThread::HandlersThread()
 {
-
 }

@@ -1,6 +1,7 @@
 #ifndef HANDLERSTHREAD_H
 #define HANDLERSTHREAD_H
 #include <QThread>
+#include "mainwindow.h"
 
 class HandlersThread : public QThread
 {
@@ -8,6 +9,7 @@ class HandlersThread : public QThread
 
 protected:
     void run();
+    MainWindow *mainWindow;
 public:
     HandlersThread();
 };

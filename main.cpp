@@ -7,6 +7,7 @@
 #include "joystick/joystickhandler.h"
 #include <QGst/Init>
 #include "handlersthread.h"
+#include <QThreadPool>
 
 int main(int argc, char *argv[])
 {
@@ -22,12 +23,20 @@ int main(int argc, char *argv[])
     player1.play();
 //    player2.play();
 
-    MainWindow w(0, &player1, &player2);
+
     NetworkHandler nh;
     JoystickHandler s(0, &nh);
+
+    MainWindow w(0, &player1, &player2);
+
+
 //    HandlersThread ht;
-//    ht.wait();
+
+
 //    ht.start();
+//    ht.wait();
+
+
     w.show();
     return a.exec();
 }
