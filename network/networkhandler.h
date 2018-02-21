@@ -11,10 +11,10 @@ class NetworkHandler : public QObject
 {
      Q_OBJECT
 public:
-    static const int UDP_PI_PORT = 5001;
-    static const int TCP_SERVER_PORT = 8082;
-    static const int TCP_BIND_PORT = 5002;
-    static const int UDP_BIND_PORT = 5003;
+    static const int UDP_PI_PORT = 9010;
+    static const int TCP_SERVER_PORT = 9005;
+    static const int TCP_BIND_PORT = 9002;
+    static const int UDP_BIND_PORT = 9003;
     static const QHostAddress SERVER_IP;
 
     NetworkHandler();
@@ -24,7 +24,7 @@ public:
     void setUDPConnection(UDPConnection *udpConnection);
     void setTCPConnection(TCPConnection *tcpConnection);
     bool isUDPSocketValid();
-    //where iss TCPP
+    ~NetworkHandler();
 private:
     UDPConnection *udpConnection;
     TCPConnection *tcpConnection;

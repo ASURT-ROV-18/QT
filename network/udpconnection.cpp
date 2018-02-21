@@ -66,6 +66,7 @@ QUdpSocket* UDPConnection::getUDPSocket()
 UDPConnection::~UDPConnection()
 {
     udpSocket->close();
+    delete udpSocket;
 }
 
 

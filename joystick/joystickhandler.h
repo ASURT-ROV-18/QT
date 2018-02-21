@@ -10,6 +10,7 @@ class JoystickHandler : public QObject
 public:
     JoystickHandler(int libNumber);
     JoystickHandler(int libNumber, NetworkHandler *networkHandler);
+    ~JoystickHandler();
 private:
     static int AXES_MESSAGE;
     static int BUTTONS_MESSAGE;
@@ -21,6 +22,7 @@ private:
     void updateAxes(QVector<int> diffs, QVector<int> newReadings);
     void updateButtons(QVector<int> diffs, QVector<int> newReadings);
     QString buildMessage(int messageType, QVector<int> values);
+    QString buildMessage_noargs();
     QVector<int> compareButtons(QVector<int> newReadings);
     int ERROR_PERCENTAGE = 0;
     void init(int libNumber);
@@ -30,9 +32,11 @@ public slots:
     void validateNewAxesData();
     void validateNewButtonsData();
     void reconnect();
+    void send();
 
 signals:
     void sendJoystickData(QString message);
+    void sendJoystickData_noargs(QString message);
 };
 
 #endif // JOYSTICKHANDLER_H

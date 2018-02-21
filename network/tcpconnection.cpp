@@ -9,7 +9,7 @@ TCPConnection::TCPConnection(int port, int serverPort, QHostAddress serverAddres
 {
     QObject(0);
     tcpSocket = new QTcpSocket();
-    bindTo(port);
+    //bindTo(port);
     this->serverAddress = serverAddress;
     this->serverPort = serverPort;
     connectToServer();
@@ -21,7 +21,7 @@ bool TCPConnection::bindTo(int port)
     if(isReady()){
         tcpSocket->close();
     }
-    return tcpSocket->bind(QHostAddress("0.0.0.0"), port);
+    return tcpSocket->bind(QHostAddress::LocalHost, port);
 }
 
 bool TCPConnection::isReady()
@@ -73,6 +73,7 @@ QTcpSocket* TCPConnection::getTCPSocket()
 TCPConnection::~TCPConnection()
 {
     tcpSocket->close();
+    delete tcpSocket;
 }
 
 

@@ -70,8 +70,8 @@ MainWindow::MainWindow(QWidget *parent, Camera* player1, Camera* player2) :
 
 
 //    //external camera stream
-////    player1->init("v4l2src device=/dev/video1 ! image/jpeg, width=1280, height=720, framerate=60/1 ! rtpjpegpay ! application/x-rtp,media=(string)video,clock-rate=90000,encoding-name=JPEG ! rtpjpegdepay ! jpegdec ! vaapipostproc", "5000");
-////    player1->play();
+//    player1->init("v4l2src device=/dev/video1 ! image/jpeg, width=1280, height=720, framerate=60/1 ! rtpjpegpay ! application/x-rtp,media=(string)video,clock-rate=90000,encoding-name=JPEG ! rtpjpegdepay ! jpegdec ! vaapipostproc", "5000");
+//    player1->play();
 
 
 //    //webcam stream
