@@ -18,7 +18,7 @@ JoystickHandler::JoystickHandler(int libNumber, NetworkHandler *networkHandler)
     init(libNumber);
     QTimer *checkConnectionTimer = new QTimer(this);
     connect(checkConnectionTimer, SIGNAL(timeout()),this, SLOT(reconnect()));
-//    connect(checkConnectionTimer, SIGNAL(timeout()),this, SLOT(send()));
+    connect(checkConnectionTimer, SIGNAL(timeout()),this, SLOT(send()));
     checkConnectionTimer->start(100);
 //    connect(this, SIGNAL(sendJoystickData_noargs(QString)), networkHandler, SLOT(sendUDPMessage(QString)));
     connect(this, SIGNAL(sendJoystickData_noargs(QString)), networkHandler, SLOT(sendTCPMessage(QString)));

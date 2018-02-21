@@ -6,6 +6,7 @@
 #include "joystick/sdljoystick.h"
 #include "joystick/joystickhandler.h"
 #include <QGst/Init>
+#include "handlersthread.h"
 
 int main(int argc, char *argv[])
 {
@@ -22,8 +23,10 @@ int main(int argc, char *argv[])
 //    player2.play();
 
     MainWindow w(0, &player1, &player2);
-    NetworkHandler nh;
-    JoystickHandler s(0, &nh);
+//    NetworkHandler nh;
+//    JoystickHandler s(0, &nh);
+    HandlersThread ht;
+    ht.start();
     w.show();
     return a.exec();
 }
