@@ -23,10 +23,11 @@ int main(int argc, char *argv[])
 //    player2.play();
 
     MainWindow w(0, &player1, &player2);
-//    NetworkHandler nh;
-//    JoystickHandler s(0, &nh);
-    HandlersThread ht;
-    ht.start();
+    NetworkHandler nh;
+    JoystickHandler s(0, &nh);
+//    HandlersThread ht;
+//    ht.wait();
+//    ht.start();
     w.show();
     return a.exec();
 }

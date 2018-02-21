@@ -1,8 +1,8 @@
 #include "networkhandler.h"
 
 #include <exception>
-const QHostAddress NetworkHandler::SERVER_IP(QHostAddress("10.0.1.55"));
-//const QHostAddress NetworkHandler::SERVER_IP(QHostAddress::LocalHost);
+//const QHostAddress NetworkHandler::SERVER_IP(QHostAddress("10.0.1.55"));
+const QHostAddress NetworkHandler::SERVER_IP(QHostAddress::LocalHost);
 //const QHostAddress NetworkHandler::SERVER_IP(QHostAddress("192.168.43.8"));
 NetworkHandler::NetworkHandler()
 {

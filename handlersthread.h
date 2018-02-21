@@ -8,7 +8,6 @@ class HandlersThread : public QThread
 
 protected:
     void run();
-
 public:
     HandlersThread();
 };
