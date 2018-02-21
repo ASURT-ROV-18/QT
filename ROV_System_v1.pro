@@ -28,8 +28,7 @@ HEADERS += mainwindow.h \
            network/udpconnection.h \
            joystick/joystickhandler.h \
            videostream/camera.h \
-           UI_elements/clock.h \
-    handlersthread.h
+           UI_elements/clock.h
 
 
 FORMS += mainwindow.ui
@@ -43,8 +42,7 @@ SOURCES += main.cpp \
            network/udpconnection.cpp \
            joystick/joystickhandler.cpp \
            videostream/camera.cpp \
-           UI_elements/clock.cpp \
-    handlersthread.cpp
+           UI_elements/clock.cpp
 
 
 

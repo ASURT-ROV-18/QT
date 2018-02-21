@@ -18,7 +18,7 @@ JoystickHandler::JoystickHandler(int libNumber, NetworkHandler *networkHandler)
     init(libNumber);
     QTimer *checkConnectionTimer = new QTimer(this);
     connect(checkConnectionTimer, SIGNAL(timeout()),this, SLOT(reconnect()));
-    connect(checkConnectionTimer, SIGNAL(timeout()),this, SLOT(send()));
+//    connect(checkConnectionTimer, SIGNAL(timeout()),this, SLOT(send()));
     checkConnectionTimer->start(100);
 //    connect(this, SIGNAL(sendJoystickData_noargs(QString)), networkHandler, SLOT(sendUDPMessage(QString)));
     connect(this, SIGNAL(sendJoystickData_noargs(QString)), networkHandler, SLOT(sendTCPMessage(QString)));
@@ -72,7 +72,7 @@ void JoystickHandler::updateButtons(QVector<int> diffs, QVector<int> newReadings
     for(int i = 0; i < diffs.size(); i++){
         buttonsLastValues[diffs[i]] = newReadings[diffs[i]];
     }
-    emit sendJoystickData_noargs(buildMessage_noargs());
+    emit sendJoystickData(buildMessage(JoystickHandler::BUTTONS_MESSAGE, buttonsLastValues));
 }
 
 QString JoystickHandler::buildMessage_noargs()
