@@ -1,8 +1,6 @@
 #ifndef HANDLERSTHREAD_H
 #define HANDLERSTHREAD_H
-
 #include <QThread>
-
 
 class HandlersThread : public QThread
 {
