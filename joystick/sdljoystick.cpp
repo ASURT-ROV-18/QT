@@ -44,7 +44,7 @@ int SDLJoystick::getAxisMinValue()
 
 bool SDLJoystick::init()
 {
-    if(SDL_Init(SDL_INIT_JOYSTICK ) < 0){
+    if(controller == NULL && SDL_Init(SDL_INIT_JOYSTICK ) < 0){
         qDebug() << "failed " << SDL_GetError() << endl;
         return false;
     }
@@ -53,7 +53,8 @@ bool SDLJoystick::init()
 //        qDebug() << "no Joystick connected" << endl;
         return false;
     }else{
-        controller = SDL_JoystickOpen(0);
+        if(controller == NULL)
+            controller = SDL_JoystickOpen(0);
         if(controller == NULL){
 //            qDebug() << "Unable to open game controller " << SDL_GetError() << endl;
             return false;

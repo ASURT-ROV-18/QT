@@ -13,7 +13,7 @@
 class SDLJoystick : public Joystick
 {
     Q_OBJECT
-    Q_INTERFACES(Joystick)
+//    Q_INTERFACES(Joystick)
 public:
     SDLJoystick();
     QVector<int> getAxes();
