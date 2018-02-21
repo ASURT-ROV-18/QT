@@ -72,7 +72,7 @@ void JoystickHandler::updateButtons(QVector<int> diffs, QVector<int> newReadings
     for(int i = 0; i < diffs.size(); i++){
         buttonsLastValues[diffs[i]] = newReadings[diffs[i]];
     }
-    emit sendJoystickData(buildMessage(JoystickHandler::BUTTONS_MESSAGE, buttonsLastValues));
+    emit sendJoystickData_noargs(buildMessage_noargs());
 }
 
 QString JoystickHandler::buildMessage_noargs()
