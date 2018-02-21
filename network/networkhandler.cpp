@@ -10,6 +10,8 @@ NetworkHandler::NetworkHandler()
     setTCPConnection(new TCPConnection(TCP_BIND_PORT, TCP_SERVER_PORT, SERVER_IP));
     setUDPConnection(new UDPConnection(UDP_BIND_PORT));
 
+    qDebug() << "Network handler" << endl;
+
 }
 
 NetworkHandler::NetworkHandler(UDPConnection *udpConnection)

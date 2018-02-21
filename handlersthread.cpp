@@ -8,6 +8,7 @@
 
 void HandlersThread::run()
 {
+    qDebug() << "handler Thread" << endl;
     NetworkHandler nh;
     JoystickHandler s(0, &nh);
 }
