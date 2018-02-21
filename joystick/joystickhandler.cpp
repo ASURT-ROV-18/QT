@@ -86,7 +86,7 @@ QString JoystickHandler::buildMessage_noargs()
             QString("%1").arg((int)(axesLastValues[2]/327.67) ,6 , 10, QChar('0')) + "; z " +
             QString("%1").arg((int)(((axesLastValues[3]/327.67)+100)/2) ,6 , 10, QChar('0')) + "; ";
 
-//    qDebug() << message;
+    qDebug() << message;
     return message;
 }
 

@@ -53,8 +53,7 @@ bool SDLJoystick::init()
 //        qDebug() << "no Joystick connected" << endl;
         return false;
     }else{
-        if(controller == NULL)
-            controller = SDL_JoystickOpen(0);
+        controller = SDL_JoystickOpen(0);
         if(controller == NULL){
 //            qDebug() << "Unable to open game controller " << SDL_GetError() << endl;
             return false;
