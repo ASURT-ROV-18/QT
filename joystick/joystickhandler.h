@@ -3,6 +3,7 @@
 #include "joystick.h"
 #include <math.h>
 #include <network/networkhandler.h>
+#include "mainwindow.h"
 
 class JoystickHandler : public QObject
 {
@@ -10,7 +11,9 @@ class JoystickHandler : public QObject
 public:
     JoystickHandler(int libNumber);
     JoystickHandler(int libNumber, NetworkHandler *networkHandler);
+    JoystickHandler(int libNumber, NetworkHandler *networkHandler, MainWindow *mainWindow);
     ~JoystickHandler();
+
 private:
     static int AXES_MESSAGE;
     static int BUTTONS_MESSAGE;
@@ -27,6 +30,7 @@ private:
     int ERROR_PERCENTAGE = 0;
     void init(int libNumber);
     int libNumber;
+    MainWindow *mainWindow;
 
 public slots:
     void validateNewAxesData();

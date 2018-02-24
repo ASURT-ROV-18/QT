@@ -1,8 +1,8 @@
 #include "networkhandler.h"
 
 #include <exception>
-const QHostAddress NetworkHandler::SERVER_IP(QHostAddress("10.0.1.55"));
-//const QHostAddress NetworkHandler::SERVER_IP(QHostAddress::LocalHost);
+//const QHostAddress NetworkHandler::SERVER_IP(QHostAddress("10.0.1.55"));
+const QHostAddress NetworkHandler::SERVER_IP(QHostAddress::LocalHost);
 //const QHostAddress NetworkHandler::SERVER_IP(QHostAddress("192.168.43.8"));
 
 #include <QTimer>
@@ -13,13 +13,6 @@ NetworkHandler::NetworkHandler()
     setUDPConnection(new UDPConnection(UDP_BIND_PORT));
 
     qDebug() << "Network handler" << endl;
-
-    QTimer *timer = new QTimer();
-    connect(timer, SIGNAL(timeout()), this, SLOT(testing()));
-    timer->start(100);
-
-
-
 }
 
 NetworkHandler::NetworkHandler(UDPConnection *udpConnection)
@@ -102,13 +95,5 @@ void NetworkHandler::sendUDPMessage(QString message)
 {
     udpConnection->sendTo(message, UDP_PI_PORT, SERVER_IP);
 }
-
-void NetworkHandler::testing()
-{
-    this->sendTCPMessage("---------------------------");
-}
-
-
-
 
 

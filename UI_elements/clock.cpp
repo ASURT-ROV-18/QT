@@ -15,7 +15,13 @@ Clock::Clock(QWidget *parent, int minutes, int seconds)
     stopWatchLabel->setText(timeValue->toString().mid(3));
 
     QObject::connect(qTimer,SIGNAL(timeout()),this,SLOT(setDisplay()));
-    qTimer->start(1000);
+//    qTimer->start(1000);
+
+}
+
+void Clock::start()
+{
+   qTimer->start(1000);
 
 }
 

@@ -1,6 +1,7 @@
 #include "joystickhandler.h"
 #include "sdljoystick.h"
 #include <QTime>
+#include "mainwindow.h"
 
 
 int JoystickHandler::AXES_MESSAGE = 0;
@@ -12,7 +13,7 @@ JoystickHandler::JoystickHandler(int libNumber)
     init(libNumber);
 }
 
-JoystickHandler::JoystickHandler(int libNumber, NetworkHandler *networkHandler)
+JoystickHandler::JoystickHandler(int libNumber, NetworkHandler *networkHandler )
 {
     QObject(0);
     init(libNumber);
@@ -24,6 +25,22 @@ JoystickHandler::JoystickHandler(int libNumber, NetworkHandler *networkHandler)
     connect(this, SIGNAL(sendJoystickData_noargs(QString)), networkHandler, SLOT(sendTCPMessage(QString)));
 
     qDebug() << "Joystick handler" << endl;
+}
+
+JoystickHandler::JoystickHandler(int libNumber, NetworkHandler *networkHandler, MainWindow *mainWindow)
+{
+    init(libNumber);
+    QTimer *checkConnectionTimer = new QTimer(this);
+    connect(checkConnectionTimer, SIGNAL(timeout()),this, SLOT(reconnect()));
+//    connect(checkConnectionTimer, SIGNAL(timeout()),this, SLOT(send()));
+    checkConnectionTimer->start(100);
+//    connect(this, SIGNAL(sendJoystickData_noargs(QString)), networkHandler, SLOT(sendUDPMessage(QString)));
+    connect(this, SIGNAL(sendJoystickData_noargs(QString)), networkHandler, SLOT(sendTCPMessage(QString)));
+    this->mainWindow = mainWindow;
+
+    qDebug() << "Joystick handler" << endl;
+
+
 }
 
 JoystickHandler::~JoystickHandler()
@@ -74,18 +91,39 @@ void JoystickHandler::updateButtons(QVector<int> diffs, QVector<int> newReadings
     for(int i = 0; i < diffs.size(); i++){
         buttonsLastValues[diffs[i]] = newReadings[diffs[i]];
     }
-    emit sendJoystickData(buildMessage(JoystickHandler::BUTTONS_MESSAGE, buttonsLastValues));
+
+
+    if(buttonsLastValues[1] == 1){
+        qDebug() << buttonsLastValues << endl;
+        int cInd = mainWindow->tabWidget->currentIndex();
+        mainWindow->tabWidget->setCurrentIndex((++cInd)%3);
+    }
+
+    if(buttonsLastValues[11] == 1){
+        qDebug() << buttonsLastValues << endl;
+        mainWindow->clock->start();
+    }
+
+
+
+
+    emit sendJoystickData_noargs(buildMessage_noargs());
 }
 
 QString JoystickHandler::buildMessage_noargs()
 {
     QString message = " ";
 
-    message += "x " + QString("%1").arg((int)(axesLastValues[0]/327.67) ,6 , 10, QChar('0')) + "; y " +
-            QString("%1").arg((int)(axesLastValues[1]/327.67) ,6 , 10, QChar('0')) + "; r " +
-            QString("%1").arg((int)(axesLastValues[2]/327.67) ,6 , 10, QChar('0')) + "; z " +
-            QString("%1").arg((int)(((axesLastValues[3]/327.67)+100)/2) ,6 , 10, QChar('0')) + "; ";
+    message += "x " + QString("%1").arg((int)(axesLastValues[0]/327.67) ,6 , 10, QChar('0'));
+    message += "; y " + QString("%1").arg((int)(-1*axesLastValues[1]/327.67) ,6 , 10, QChar('0'));
+    message += "; r " + ((buttonsLastValues[0] == 1) ? QString("%1").arg((int)(axesLastValues[2]/327.67) ,6 , 10, QChar('0')) : "000000");
+    message += "; z " + QString("%1").arg(100-(int)(((axesLastValues[3]/327.67)+100)/2) ,6 , 10, QChar('0')) + "; ";
+    message += "up "+ QString("%1").arg(buttonsLastValues[4],1,10, QChar('0')) + "; ";
+    message += "down "+ QString("%1").arg(buttonsLastValues[2],1,10, QChar('0')) + " ";
+    message += ";";
 
+    qDebug() << message;
+    return message;
     qDebug() << message;
     return message;
 }

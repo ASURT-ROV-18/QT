@@ -14,6 +14,7 @@ class Clock : public QWidget
 public:
     Clock(QWidget *parent, int minutes, int seconds);
     QLabel *stopWatchLabel;
+    void start();
 
 private:
     QTimer *qTimer;

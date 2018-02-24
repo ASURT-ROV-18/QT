@@ -20,7 +20,7 @@
 //using namespace QtOcv;
 //using namespace DMCV;
 
-MainWindow::MainWindow(QWidget *parent, Camera* player1, Camera* player2) :
+MainWindow::MainWindow(QWidget *parent, Camera* player1, Camera* player2, bool timer) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
@@ -40,6 +40,7 @@ MainWindow::MainWindow(QWidget *parent, Camera* player1, Camera* player2) :
     tabWidget->setTabPosition(QTabWidget::TabPosition(2));
     this->setCentralWidget(tabWidget);
 
+//    connect(this, SIGNAL(changeTab(int)), tabWidget, SLOT(tabChanged(int)));
 
     this->player1 = player1;
     this->player2 = player2;
@@ -70,6 +71,13 @@ MainWindow::MainWindow(QWidget *parent, Camera* player1, Camera* player2) :
 
 
 
+
+
+
+
+
+
+
 //    //external camera stream
 //    player1->init("v4l2src device=/dev/video1 ! image/jpeg, width=1280, height=720, framerate=60/1 ! rtpjpegpay ! application/x-rtp,media=(string)video,clock-rate=90000,encoding-name=JPEG ! rtpjpegdepay ! jpegdec ! vaapipostproc", "5000");
 //    player1->play();
@@ -93,9 +101,10 @@ MainWindow::MainWindow(QWidget *parent, Camera* player1, Camera* player2) :
 ////    player2->init("udpsrc port=5000 ! application/x-rtp,media=(string)video,clock-rate=90000,encoding-name=JPEG ! rtpjpegdepay ! jpegdec ! vaapipostproc", "5000");
 ////    player2->play();
 ///
-    Clock *c = new Clock(masterWidget, 4, 0);
-    masterWidgetLayout->addWidget(c, 0, 0);
-
+    if(timer){
+        clock = new Clock(masterWidget, 15, 0);
+        masterWidgetLayout->addWidget(clock, 0, 0);
+    }
 
 }
 
@@ -112,6 +121,11 @@ void MainWindow::setCams(Camera *player1, Camera *player2)
 {
     this->player1 = player1;
     this->player2 = player2;
+}
+
+void MainWindow::changeTab(int index)
+{
+    emit tabWidget->currentChanged(index);
 }
 
 
