@@ -7,6 +7,8 @@ Clock::Clock(QWidget *parent, int minutes, int seconds)
     this->stopWatchLabel = new QLabel(this);
 
     qTimer = new QTimer(this);
+    this->minuts = minutes;
+    this->seconds = seconds;
     timeValue = new QTime(0, minutes, seconds);
 
     setLabelColor(minutes);
@@ -22,6 +24,14 @@ Clock::Clock(QWidget *parent, int minutes, int seconds)
 void Clock::start()
 {
    qTimer->start(1000);
+   isStarted = true;
+
+   timeValue = new QTime(0, minuts, seconds);
+
+   setLabelColor(minuts);
+
+   stopWatchLabel->setFixedWidth(100);
+   stopWatchLabel->setText(timeValue->toString().mid(3));
 
 }
 

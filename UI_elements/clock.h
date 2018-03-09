@@ -15,11 +15,14 @@ public:
     Clock(QWidget *parent, int minutes, int seconds);
     QLabel *stopWatchLabel;
     void start();
+    bool isStarted = false;
 
 private:
     QTimer *qTimer;
     QTime *timeValue;
     void setLabelColor(int minutes);
+    int minuts;
+    int seconds;
 public slots:
     void setDisplay();
 };

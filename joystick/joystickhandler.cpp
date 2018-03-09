@@ -2,6 +2,7 @@
 #include "sdljoystick.h"
 #include <QTime>
 #include "mainwindow.h"
+#include <QImage>
 
 
 int JoystickHandler::AXES_MESSAGE = 0;
@@ -93,6 +94,8 @@ void JoystickHandler::updateButtons(QVector<int> diffs, QVector<int> newReadings
     }
 
 
+//    qDebug() << buttonsLastValues << endl;
+
     if(buttonsLastValues[1] == 1){
         qDebug() << buttonsLastValues << endl;
         int cInd = mainWindow->tabWidget->currentIndex();
@@ -100,8 +103,39 @@ void JoystickHandler::updateButtons(QVector<int> diffs, QVector<int> newReadings
     }
 
     if(buttonsLastValues[11] == 1){
-        qDebug() << buttonsLastValues << endl;
-        mainWindow->clock->start();
+
+            mainWindow->clock->start();
+
+
+    }
+
+    if(buttonsLastValues[10] == 1){
+        if(mode == 1){
+            mode = 0;
+        }else{
+            mode = 1;
+        }
+    }
+
+    if(buttonsLastValues[9] == 1){
+        int cInd = mainWindow->tabWidget->currentIndex();
+        try{
+            if(cInd == 0){
+                QImage im = mainWindow->player1->takeScreenshot();
+                im.save("/home/yuzo-san/Desktop/"+ QTime::currentTime().toString() + ".png");
+            }else if(cInd == 1){
+                QImage im = mainWindow->player2->takeScreenshot();
+                im.save("/home/yuzo-san/Desktop/"+ QTime::currentTime().toString() + ".png");
+            }else{
+                QImage im1 = mainWindow->player1->takeScreenshot();
+                im1.save("/home/yuzo-san/Desktop/"+ QTime::currentTime().toString() + ".png");
+
+                QImage im2 = mainWindow->player2->takeScreenshot();
+                im2.save("/home/yuzo-san/Desktop/"+ QTime::currentTime().toString() + ".png");
+            }
+        }catch(std::exception e){
+
+        }
     }
 
 
@@ -114,16 +148,22 @@ QString JoystickHandler::buildMessage_noargs()
 {
     QString message = " ";
 
-    message += "x " + QString("%1").arg((int)(axesLastValues[0]/327.67) ,6 , 10, QChar('0'));
-    message += "; y " + QString("%1").arg((int)(-1*axesLastValues[1]/327.67) ,6 , 10, QChar('0'));
-    message += "; r " + ((buttonsLastValues[0] == 1) ? QString("%1").arg((int)(axesLastValues[2]/327.67) ,6 , 10, QChar('0')) : "000000");
-    message += "; z " + QString("%1").arg(100-(int)(((axesLastValues[3]/327.67)+100)/2) ,6 , 10, QChar('0')) + "; ";
+    message += "x " + QString("%1").arg((int)(axesLastValues[0]/327.67) ,3 , 10, QChar('0'));
+    message += "; y " + QString("%1").arg((int)(-1*axesLastValues[1]/327.67) ,3 , 10, QChar('0'));
+    message += "; r " + ((buttonsLastValues[0] == 1) ? QString("%1").arg((int)(axesLastValues[2]/327.67) ,3 , 10, QChar('0')) : "000");
+    message += "; z " + QString("%1").arg(100-(int)(((axesLastValues[3]/327.67)+100)/2) ,3 , 10, QChar('0')) + "; ";
+//    int t = 100-(int)(((axesLastValues[3]/327.67)+100)/2);
+//    message += "; z " + QString("%1").arg( (68)*(t)/100+32 ,3 , 10, QChar('0')) + "; ";
     message += "up "+ QString("%1").arg(buttonsLastValues[4],1,10, QChar('0')) + "; ";
-    message += "down "+ QString("%1").arg(buttonsLastValues[2],1,10, QChar('0')) + " ";
-    message += ";";
+    message += "down "+ QString("%1").arg(buttonsLastValues[2],1,10, QChar('0')) + " ;";
+    message += " L " + QString("%1").arg((buttonsLastValues[8] == 1) ? 1 : 0,1,10, QChar('0')) + "; ";
+    message += "cam_up " + QString("%1").arg((buttonsLastValues[5] == 1) ? 1 : 0,1,10, QChar('0')) + "; ";
+    message += "cam_down " + QString("%1").arg((buttonsLastValues[3] == 1) ? 1 : 0,1,10, QChar('0')) + "; ";
+    message += "mode " + QString("%1").arg(mode,1,10, QChar('0')) + "; ";
 
-    qDebug() << message;
-    return message;
+
+
+
     qDebug() << message;
     return message;
 }
@@ -186,7 +226,6 @@ void JoystickHandler::validateNewAxesData()
     QVector<int> newValues = joystick->getAxes();
     QVector<int> differences = compareAxes(newValues);
     differences = ignoreError(differences, newValues);
-//    qDebug() << newValues << endl;
     updateAxes(differences, newValues);
 }
 

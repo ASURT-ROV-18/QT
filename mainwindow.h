@@ -23,14 +23,15 @@ public:
     void changeTab(int index);
     QTabWidget *tabWidget;
     Clock *clock;
+    Camera* player1;
+    Camera* player2;
 
 
 
 private:
     QGst::PipelinePtr m_pipeline, videosrc;
     QGst::State state() const;
-    Camera* player1;
-    Camera* player2;
+
 
     QWidget *centralWidgetTab1;
     QGridLayout *centralGridTab1;

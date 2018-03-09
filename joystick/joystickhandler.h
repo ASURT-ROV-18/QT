@@ -4,6 +4,7 @@
 #include <math.h>
 #include <network/networkhandler.h>
 #include "mainwindow.h"
+#include <QString>
 
 class JoystickHandler : public QObject
 {
@@ -12,6 +13,7 @@ public:
     JoystickHandler(int libNumber);
     JoystickHandler(int libNumber, NetworkHandler *networkHandler);
     JoystickHandler(int libNumber, NetworkHandler *networkHandler, MainWindow *mainWindow);
+    int mode = 0;
     ~JoystickHandler();
 
 private:
