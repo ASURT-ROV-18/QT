@@ -3,9 +3,8 @@
 
 Clock::Clock(QWidget *parent, int minutes, int seconds)
 {
-    this->setParent(parent);
+    //this->setParent(parent);
     this->stopWatchLabel = new QLabel(this);
-
     qTimer = new QTimer(this);
     this->minuts = minutes;
     this->seconds = seconds;
@@ -15,7 +14,6 @@ Clock::Clock(QWidget *parent, int minutes, int seconds)
 
     stopWatchLabel->setFixedWidth(100);
     stopWatchLabel->setText(timeValue->toString().mid(3));
-
     QObject::connect(qTimer,SIGNAL(timeout()),this,SLOT(setDisplay()));
 //    qTimer->start(1000);
 
@@ -32,7 +30,6 @@ void Clock::start()
 
    stopWatchLabel->setFixedWidth(100);
    stopWatchLabel->setText(timeValue->toString().mid(3));
-
 }
 
 void Clock::setLabelColor(int minutes)
@@ -59,8 +56,8 @@ void Clock::setDisplay()
         stopWatchLabel->setText(" ");
         return;
     }
-
     timeValue->setHMS(0, minutes, seconds);
     setLabelColor(minutes);
     stopWatchLabel->setText(timeValue->toString().mid(3));
+    parentWidget()->update();
 }

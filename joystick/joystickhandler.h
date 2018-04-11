@@ -5,6 +5,7 @@
 #include <network/networkhandler.h>
 #include "mainwindow.h"
 #include <QString>
+#include <QVector>
 
 class JoystickHandler : public QObject
 {
@@ -15,12 +16,12 @@ public:
     JoystickHandler(int libNumber, NetworkHandler *networkHandler, MainWindow *mainWindow);
     int mode = 0;
     ~JoystickHandler();
+    QVector<int> axesLastValues;
 
 private:
     static int AXES_MESSAGE;
     static int BUTTONS_MESSAGE;
     Joystick *joystick = NULL;
-    QVector<int> axesLastValues;
     QVector<int> buttonsLastValues;
     QVector<int> compareAxes(QVector<int> newReadings);
     QVector<int> ignoreError(QVector<int> diffs, QVector<int> newReadings);
@@ -43,6 +44,8 @@ public slots:
 signals:
     void sendJoystickData(QString message);
     void sendJoystickData_noargs(QString message);
+    void updateLabels(QVector<int>);
+
 };
 
 #endif // JOYSTICKHANDLER_H

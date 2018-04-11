@@ -7,6 +7,8 @@
 #include <videostream/camera.h>
 #include <QGridLayout>
 #include <UI_elements/clock.h>
+#include <UI_elements/transparentlabel.h>
+#include <UI_elements/iprectangle.h>
 
 namespace Ui {
 class MainWindow;
@@ -25,6 +27,7 @@ public:
     Clock *clock;
     Camera* player1;
     Camera* player2;
+    TransparentLabel *axisLabel;
 
 
 
@@ -42,11 +45,13 @@ private:
     QWidget *masterWidget;
     QGridLayout *masterWidgetLayout;
     Ui::MainWindow *ui;
+    IPRectangle *rectangle = NULL;
 
 
 
 private slots:
     void tabChanged(int index);
+    void updateAxesLabel(QVector<int> axes);
 };
 
 

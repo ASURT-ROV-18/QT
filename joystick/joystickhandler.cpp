@@ -12,6 +12,8 @@ JoystickHandler::JoystickHandler(int libNumber)
     QObject(0);
     this->libNumber = libNumber;
     init(libNumber);
+
+
 }
 
 JoystickHandler::JoystickHandler(int libNumber, NetworkHandler *networkHandler )
@@ -24,7 +26,6 @@ JoystickHandler::JoystickHandler(int libNumber, NetworkHandler *networkHandler )
     checkConnectionTimer->start(100);
 //    connect(this, SIGNAL(sendJoystickData_noargs(QString)), networkHandler, SLOT(sendUDPMessage(QString)));
     connect(this, SIGNAL(sendJoystickData_noargs(QString)), networkHandler, SLOT(sendTCPMessage(QString)));
-
     qDebug() << "Joystick handler" << endl;
 }
 
@@ -38,7 +39,12 @@ JoystickHandler::JoystickHandler(int libNumber, NetworkHandler *networkHandler, 
 //    connect(this, SIGNAL(sendJoystickData_noargs(QString)), networkHandler, SLOT(sendUDPMessage(QString)));
     connect(this, SIGNAL(sendJoystickData_noargs(QString)), networkHandler, SLOT(sendTCPMessage(QString)));
     this->mainWindow = mainWindow;
+    connect(this, SIGNAL(updateLabels(QVector<int>)), mainWindow, SLOT(updateAxesLabel(QVector<int>)));
 
+
+//    QTimer *change_label = new QTimer(this);
+//    connect(change_label, SIGNAL(timeout()),this, SLOT(updateLabels()));
+//    change_label->start(100);
     qDebug() << "Joystick handler" << endl;
 
 
@@ -160,11 +166,8 @@ QString JoystickHandler::buildMessage_noargs()
     message += "cam_up " + QString("%1").arg((buttonsLastValues[5] == 1) ? 1 : 0,1,10, QChar('0')) + "; ";
     message += "cam_down " + QString("%1").arg((buttonsLastValues[3] == 1) ? 1 : 0,1,10, QChar('0')) + "; ";
     message += "mode " + QString("%1").arg(mode,1,10, QChar('0')) + "; ";
-
-
-
-
     qDebug() << message;
+    emit updateLabels(axesLastValues);
     return message;
 }
 
@@ -242,3 +245,13 @@ void JoystickHandler::reconnect()
         this->init(libNumber);
     }
 }
+
+//void JoystickHandler::updateLabels()
+//{
+//    try{
+//        if(joystick->isConnected())
+//             mainWindow->axisLabel->setText(QString("%1").arg(100-(int)(((axesLastValues[3]/327.67)+100)/2) ,3 , 10, QChar('0')));
+//    }catch(std::exception e){
+
+//    }
+//}

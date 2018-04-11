@@ -29,7 +29,8 @@ HEADERS += mainwindow.h \
            joystick/joystickhandler.h \
            videostream/camera.h \
            UI_elements/clock.h \
-    handlersthread.h
+           UI_elements/transparentlabel.h \
+           UI_elements/iprectangle.h
 
 
 FORMS += mainwindow.ui
@@ -44,7 +45,8 @@ SOURCES += main.cpp \
            joystick/joystickhandler.cpp \
            videostream/camera.cpp \
            UI_elements/clock.cpp \
-    handlersthread.cpp
+           UI_elements/transparentlabel.cpp \
+           UI_elements/iprectangle.cpp
 
 
 

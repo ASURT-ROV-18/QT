@@ -6,7 +6,6 @@
 #include "joystick/sdljoystick.h"
 #include "joystick/joystickhandler.h"
 #include <QGst/Init>
-#include "handlersthread.h"
 #include <QThreadPool>
 
 int main(int argc, char *argv[])

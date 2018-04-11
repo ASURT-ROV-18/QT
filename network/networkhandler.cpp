@@ -72,23 +72,24 @@ void NetworkHandler::processDataFromTCP(QString data)
 }
 
 void NetworkHandler::sendTCPMessage(QString message)
-{
-    try{
-        if(tcpConnection->isConnected()){
-            qDebug() << message;
-            tcpConnection->sendToServer(message);
-        }
-        else if(tcpConnection->connectToServer()){
-            if(tcpConnection->isReady()){
-                setTCPConnection(tcpConnection);
-                qDebug() <<"reconnected"<<  message;
-                tcpConnection->sendToServer(message);
-            }
-        }
-    }
-    catch(std::exception e){
 
-    }
+{
+//    try{
+//        if(tcpConnection->isConnected()){
+//            qDebug() << message;
+//            tcpConnection->sendToServer(message);
+//        }
+//        else if(tcpConnection->connectToServer()){
+//            if(tcpConnection->isReady()){
+//                setTCPConnection(tcpConnection);
+//                qDebug() <<"reconnected"<<  message;
+//                tcpConnection->sendToServer(message);
+//            }
+//        }
+//    }
+//    catch(std::exception e){
+
+//    }
 }
 
 void NetworkHandler::sendUDPMessage(QString message)
