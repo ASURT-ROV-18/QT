@@ -9,6 +9,7 @@
 #include <UI_elements/clock.h>
 #include <UI_elements/transparentlabel.h>
 #include <UI_elements/iprectangle.h>
+#include <QKeyEvent>
 
 namespace Ui {
 class MainWindow;
@@ -28,6 +29,7 @@ public:
     Camera* player1;
     Camera* player2;
     TransparentLabel *axisLabel;
+    void keyPressEvent(QKeyEvent* event);
 
 
 
