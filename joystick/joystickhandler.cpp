@@ -165,7 +165,11 @@ QString JoystickHandler::buildMessage_noargs()
     message += " L " + QString("%1").arg((buttonsLastValues[8] == 1) ? 1 : 0,1,10, QChar('0')) + "; ";
     message += "cam_up " + QString("%1").arg((buttonsLastValues[5] == 1) ? 1 : 0,1,10, QChar('0')) + "; ";
     message += "cam_down " + QString("%1").arg((buttonsLastValues[3] == 1) ? 1 : 0,1,10, QChar('0')) + "; ";
-    message += "mode " + QString("%1").arg(mode,1,10, QChar('0')) + "; ";
+//    message += "mode " + QString("%1").arg(mode,1,10, QChar('0')) + "; ";
+    message += "mode 0;";
+    message += " bag " + QString("%1").arg((buttonsLastValues[10] == 1) ? 1 : 0,1,10, QChar('0')) + "; ";
+
+
     qDebug() << message;
     emit updateLabels(axesLastValues);
     return message;
