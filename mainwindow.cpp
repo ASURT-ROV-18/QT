@@ -152,3 +152,14 @@ void MainWindow::updateAxesLabel(QVector<int> axes)
 {
     this->axisLabel->setText(QString("%1").arg(100-(int)(((axes[3]/327.67)+100)/2) ,3 , 10, QChar('0')));
 }
+
+void MainWindow::keyPressEvent(QKeyEvent* event) {
+
+    if(event->key() == Qt::Key_Space){
+        qDebug() << event->key();
+        if(this->rectangle->isVisible())
+          this->rectangle->setVisible(false);
+        else
+            this->rectangle->setVisible(true);
+    }
+}
