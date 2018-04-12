@@ -9,7 +9,7 @@ TransparentLabel::TransparentLabel(QWidget *parent, QString fixedPart)
     this->fixedText = fixedPart;
     this->label = new QLabel(this);
     label->setStyleSheet("QLabel{color: orange ;  font-size: 40px; }");
-    label->setFixedWidth(200);
+    label->setFixedWidth(300);
     this->setText("");
 }
 

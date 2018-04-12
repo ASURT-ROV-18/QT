@@ -98,8 +98,8 @@ MainWindow::MainWindow(QWidget *parent, Camera* player1, Camera* player2, bool t
         masterWidgetLayout->setRowStretch(1, 1);
         axisLabel = new TransparentLabel(masterWidget, "Z Axis");
         masterWidgetLayout->addWidget(axisLabel);
-        rectangle = new IPRectangle(masterWidget);
-        masterWidgetLayout->addWidget(rectangle, 0, 0);
+//        rectangle = new IPRectangle(masterWidget);
+//        masterWidgetLayout->addWidget(rectangle, 0, 0);
     }
 }
 
